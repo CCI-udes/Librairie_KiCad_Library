@@ -1,0 +1,70 @@
+name: Publish KiCad Library
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Prepare Zip Name
+        id: names
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          CLEAN_VER=${VERSION#v}
+          ZIP_NAME="C3I-Library-${CLEAN_VER}.zip"
+          echo "zip_name=${ZIP_NAME}" >> $GITHUB_OUTPUT
+          echo "version=${CLEAN_VER}" >> $GITHUB_OUTPUT
+
+      - name: Update Metadata Version
+        run: |
+          sed -i 's/"versions": \[\]/"versions": \[ {"version": "${{ steps.names.outputs.version }}", "status": "stable", "kicad_version": "7.0"} \]/' metadata.json
+
+      - name: Zip Library
+        run: |
+          zip -r ${{ steps.names.outputs.zip_name }} symbols footprints 3dmodels metadata.json
+
+      - name: Upload Zip to Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.PCM_TOKEN }}
+          file: ${{ steps.names.outputs.zip_name }}
+          tag: ${{ github.ref }}
+          overwrite: true
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: gh-pages-branch
+        continue-on-error: true
+
+      - name: Update repository.json
+        run: |
+          if [ -f gh-pages-branch/repository.json ]; then
+            cp gh-pages-branch/repository.json .
+          fi
+          python .github/scripts/update_repo.py ${{ github.event.release.tag_name }} ${{ steps.names.outputs.zip_name }} "7.0"
+          mkdir -p public
+          cp repository.json public/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.PCM_TOKEN }}
+          publish_dir: ./public
+          keep_files: true
+          branch: gh-pages
