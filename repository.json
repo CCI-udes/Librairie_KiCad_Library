@@ -5,6 +5,19 @@
             "identifier": "com.github.cci-udes.library",
             "releases": [
                 {
+                    "version": "1.0.3",
+                    "status": "stable",
+                    "kicad_version": "7.0",
+                    "download_sha256": "36feca3803c68ebf7f5740898e39b5187962da5e59d34343da8451fc3d7ef044",
+                    "download_url": "https://github.com/CCI-udes/Librairie_KiCad_Library/releases/download/v1.0.3/C3I-Library-1.0.3.zip",
+                    "install_size": 78860,
+                    "platforms": [
+                        "linux",
+                        "windows",
+                        "macos"
+                    ]
+                },
+                {
                     "version": "1.0.2",
                     "status": "stable",
                     "kicad_version": "7.0",
@@ -49,5 +62,10 @@
         }
     ],
     "name": "C3I Repository",
-    "maintainer": "C3I UdeS"
+    "maintainer": {
+        "name": "C3I UdeS",
+        "contact": {
+            "web": "https://github.com/CCI-udes/Librairie_KiCad_Library"
+        }
+    }
 }
