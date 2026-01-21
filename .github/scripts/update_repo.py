@@ -25,37 +25,33 @@ def main():
     file_size = os.path.getsize(zip_path)
     download_url = f"{REPO_URL}/releases/download/{tag}/{zip_name}"
     
-    if os.path.exists(REPO_JSON_FILE):
-        with open(REPO_JSON_FILE, 'r') as f:
-            repo_data = json.load(f)
-    else:
-        repo_data = {
-            "$schema": "https://go.kicad.org/pcm/schemas/v1/repository",
-            "packages": []
-        }
-
-    # --- CORRECTION V1.0.3 : MAINTAINER EST UN OBJET ---
-    repo_data["name"] = "C3I Repository"
-    repo_data["maintainer"] = {
-        "name": "C3I UdeS",
-        "contact": {
-            "web": REPO_URL
-        }
+    # --- MODE NETTOYAGE : On repart d'une base saine à chaque fois ---
+    # On ignore l'ancien fichier s'il est corrompu pour éviter de traîner les erreurs
+    repo_data = {
+        "$schema": "https://go.kicad.org/pcm/schemas/v1/repository",
+        "name": "C3I Repository",
+        "maintainer": {
+            "name": "C3I UdeS",
+            "contact": {
+                "web": REPO_URL
+            }
+        },
+        "packages": []
     }
-    # ---------------------------------------------------
 
-    # Trouver ou créer le paquet
-    package = next((p for p in repo_data["packages"] if p["identifier"] == "com.github.cci-udes.library"), None)
-    if not package:
-        package = {
-            "identifier": "com.github.cci-udes.library",
-            "releases": []
-        }
-        repo_data["packages"].append(package)
-
-    package["name"] = "C3I KiCad Library"
-    package["description"] = "Librairie officielle des composants C3I - UdeS"
-
+    # Définition complète du paquet (Strict Standard)
+    package = {
+        "identifier": "com.github.cci-udes.library",
+        "name": "C3I KiCad Library",
+        "description": "Librairie officielle des composants C3I - UdeS",
+        "license": "CC-BY-SA-4.0",
+        "resources": {
+            "homepage": REPO_URL
+        },
+        "releases": []
+    }
+    
+    # On ajoute notre nouvelle release
     new_release = {
         "version": tag.lstrip('v'),
         "status": "stable",
@@ -66,13 +62,13 @@ def main():
         "platforms": ["linux", "windows", "macos"]
     }
     
-    package["releases"] = [r for r in package["releases"] if r["version"] != new_release["version"]]
-    package["releases"].insert(0, new_release)
+    package["releases"].append(new_release)
+    repo_data["packages"].append(package)
 
     with open(REPO_JSON_FILE, 'w') as f:
         json.dump(repo_data, f, indent=4)
     
-    print(f"Succès ! Version {tag} corrigée (Maintainer Object).")
+    print(f"Succès ! Repository régénéré proprement pour la version {tag}.")
 
 if __name__ == "__main__":
     main()
