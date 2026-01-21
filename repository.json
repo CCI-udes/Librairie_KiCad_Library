@@ -1,5 +1,5 @@
 {
-    "$schema": "https://go.kicad.org/pcm/schemas/v1/repository",
+    "$schema": "https://gitlab.com/kicad/code/kicad/-/raw/master/kicad/pcm/schemas/pcm.v1.schema.json#/definitions/Repository",
     "name": "C3I Repository",
     "maintainer": {
         "name": "C3I UdeS",
@@ -7,30 +7,10 @@
             "web": "https://github.com/CCI-udes/Librairie_KiCad_Library"
         }
     },
-    "packages": [
-        {
-            "identifier": "com.github.cci-udes.library",
-            "name": "C3I KiCad Library",
-            "description": "Librairie officielle des composants C3I - UdeS",
-            "license": "CC-BY-SA-4.0",
-            "resources": {
-                "homepage": "https://github.com/CCI-udes/Librairie_KiCad_Library"
-            },
-            "releases": [
-                {
-                    "version": "1.0.4",
-                    "status": "stable",
-                    "kicad_version": "7.0",
-                    "download_sha256": "8f22e9ac40aafda707e2fc2bebfb77e289579376543fb9b3a9cb344815c4afce",
-                    "download_url": "https://github.com/CCI-udes/Librairie_KiCad_Library/releases/download/1.0.4/C3I-Library-1.0.4.zip",
-                    "install_size": 78860,
-                    "platforms": [
-                        "linux",
-                        "windows",
-                        "macos"
-                    ]
-                }
-            ]
-        }
-    ]
+    "packages": {
+        "url": "https://cci-udes.github.io/Librairie_KiCad_Library/packages.json",
+        "sha256": "a6d6794f9660665b443b246aef3dea6de13a33faf5c408309d284b136c1d4819",
+        "update_time_utc": "2026-01-21 03:55:35",
+        "update_timestamp": 1768967735
+    }
 }
