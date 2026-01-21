@@ -1,0 +1,19 @@
+{
+    "$schema": "https://go.kicad.org/pcm/schemas/v1/metadata",
+    "name": "C3I KiCad Library",
+    "description": "Librairie officielle des composants C3I - UdeS.",
+    "description_full": "Cette librairie contient les symboles, empreintes et modèles 3D validés pour les projets du C3I.",
+    "identifier": "com.github.cci-udes.library",
+    "type": "library",
+    "author": {
+        "name": "C3I UdeS",
+        "contact": {
+            "web": "https://github.com/CCI-udes/Librairie_KiCad_Library"
+        }
+    },
+    "license": "CC-BY-SA-4.0",
+    "resources": {
+        "homepage": "https://github.com/CCI-udes/Librairie_KiCad_Library"
+    },
+    "versions": []
+}
