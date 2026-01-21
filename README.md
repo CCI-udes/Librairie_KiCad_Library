@@ -1,114 +1,90 @@
 # Librairie KiCad - C3I
 
 Bienvenue sur le dépôt officiel de la librairie de composants KiCad du **C3I**.
-Ce dépôt centralise les symboles, empreintes (footprints) et modèles 3D utilisés dans nos projets de conception électronique.
+Ce dépôt centralise les symboles, empreintes et modèles 3D validés pour nos projets.
 
-L'objectif est d'assurer l'uniformité, la réutilisabilité et la fiabilité de nos designs de PCB.
+Grâce à l'automatisation mise en place, cette librairie s'installe et se met à jour directement depuis KiCad.
 
 ---
 
-## 📂 Structure du Dépôt
+## 🚀 Installation (Utilisateurs)
 
-L'organisation des fichiers suit la structure standard KiCad :
+Plus besoin de cloner le dépôt manuellement. Utilisez le **Plugin and Content Manager (PCM)** de KiCad.
 
-* `symbols/` : Fichiers `.kicad_sym` (Symboles schématiques)
-* `footprints/` : Dossiers `.pretty` contenant les fichiers `.kicad_mod`
-* `3dmodels/` : Fichiers `.step` (ou `.wrl`) pour la visualisation 3D
+1.  Ouvrez **KiCad**.
+2.  Cliquez sur l'icône **"Plugin and Content Manager"** (la boîte 📦) dans la fenêtre principale.
+3.  Cliquez sur **Gérer les dépôts** (Manage Repositories).
+4.  Ajoutez le dépôt du C3I avec ce lien :
 
-> **Note :** Nous utilisons des chemins relatifs pour les modèles 3D. Assurez-vous que votre variable d'environnement `${C3I_LIB_3D}` (ou équivalent) est correctement configurée dans KiCad si nécessaire, ou utilisez le chemin relatif par défaut `${KIPRJMOD}/3dmodels/...`.
+    [https://cci-udes.github.io/Librairie_KiCad_Library/repository.json](https://cci-udes.github.io/Librairie_KiCad_Library/repository.json)
+
+5.  Cliquez sur **Enregistrer**.
+6.  Dans la liste des extensions, sélectionnez "C3I Repository" dans le menu déroulant (en haut à gauche).
+7.  Cliquez sur **Installer** à côté de *C3I KiCad Library*.
+8.  Cliquez sur **Appliquer les changements**.
+
+✅ **C'est tout !** Les symboles et empreintes sont maintenant disponibles dans vos projets.
+*Quand une mise à jour est disponible, KiCad vous le signalera ici.*
+
+---
+
+## 🤝 Contribuer (Développeurs)
+
+Pour ajouter ou modifier un composant, vous devez passer par Git et GitHub.
+**Ne travaillez jamais directement sur `main`.**
+
+### Workflow
+1.  **Clonez le dépôt :**
+    ```bash
+    git clone [https://github.com/CCI-udes/Librairie_KiCad_Library.git](https://github.com/CCI-udes/Librairie_KiCad_Library.git)
+    ```
+2.  **Créez une branche** pour votre ajout :
+    ```bash
+    git checkout -b ajout-nouveau-capteur
+    ```
+3.  **Faites vos modifications** dans KiCad (Éditeurs de symboles/empreintes).
+4.  **Sauvegardez** les bibliothèques (`C3I_Library.kicad_sym` et dossier `.pretty`).
+5.  **Commit & Push :**
+    ```bash
+    git add .
+    git commit -m "Add: Capteur XYZ"
+    git push origin ajout-nouveau-capteur
+    ```
+6.  **Ouvrez une Pull Request (PR)** sur GitHub pour validation.
+
+---
+
+## 📦 Publication (Administrateurs)
+
+Pour diffuser une mise à jour à tous les membres du C3I via le PCM, il suffit de créer une **Release** sur GitHub. L'automatisation s'occupe du reste.
+
+1.  Assurez-vous que les PR sont mergés dans `main`.
+2.  Allez dans la section **Releases** du dépôt GitHub.
+3.  Cliquez sur **Draft a new release**.
+4.  **Tag version :** Créez un nouveau tag incrémental (ex: `v1.0.9`, `v1.1.0`).
+    * *Important : Le tag doit commencer par 'v'.*
+5.  Cliquez sur **Publish release**.
+
+🤖 **Le robot va automatiquement :**
+* Zipper la librairie.
+* Mettre à jour le fichier `repository.json`.
+* Rendre la mise à jour visible dans le PCM de tout le monde sous quelques minutes.
 
 ---
 
 ## 📏 Normes de Conception (Standards)
 
-Pour garantir la qualité de la librairie, tout ajout doit respecter les normes suivantes. Nous nous basons largement sur la **KiCad Library Convention (KLC)**.
+Pour garantir la qualité de la librairie :
 
-### 1. Conventions de Nommage
-* **Langue :** Anglais (Standard industriel).
-* **Format :** `Fabricant_NumeroDePiece_Description` (si applicable).
-* **Caractères :** Alphanumérique uniquement, pas d'espaces (utiliser `_` ou `-`).
-    * *Bon :* `TexasInstruments_LM358_SOIC-8`
-    * *Mauvais :* `Ampli op LM358`
+### 1. Symboles (`.kicad_sym`)
+* **Grille :** Les pins doivent être alignées sur la grille de **50 mil (1.27 mm)**.
+* **Orientation :** Entrées à gauche, Sorties à droite, Alim en haut, GND en bas.
+* **Champs :** Remplir `Datasheet` et `Footprint`.
 
-### 2. Symboles Schématiques (`.kicad_sym`)
-* **Grille :** Les pins doivent toujours être alignées sur une grille de **50 mil (1.27 mm)**.
-* **Orientation :**
-    * Entrées à gauche, Sorties à droite.
-    * Alimentation positive en haut, GND/Négative en bas.
-* **Champs obligatoires :**
-    * `Reference` (ex: U, R, C)
-    * `Value` (Nom de la pièce)
-    * `Footprint` (Lien vers l'empreinte correcte dans ce dépôt)
-    * `Datasheet` (Lien URL valide vers la fiche technique)
-
-### 3. Empreintes (`.kicad_mod`)
-* **Orientation :** Pin 1 toujours en haut à gauche ou selon la norme IPC.
-* **Sérigraphie (Silkscreen) :**
-    * Doit inclure le contour du composant.
-    * Doit clairement indiquer la Pin 1.
-    * Le texte ne doit jamais recouvrir un pad.
-* **Courtyard (F.CrtYd) :** Obligatoire. Doit définir l'espace physique requis + une marge de sécurité (généralement 0.25mm autour du composant).
-* **Pad Stack :** Vérifiez que les tailles de perçage et de cuivre respectent les capacités de notre fabricant de PCB habituel (ex: JLCPCB, PCBWay).
-
-### 4. Modèles 3D
-* Format préféré : **STEP** (`.step` ou `.stp`) pour faciliter l'intégration mécanique.
-* L'échelle doit être 1:1.
-* Le modèle doit être parfaitement aligné avec l'empreinte.
+### 2. Empreintes (`.kicad_mod`)
+* **Pin 1 :** Toujours clairement identifiée.
+* **Courtyard :** Contour de sécurité obligatoire (`F.CrtYd`).
+* **3D :** Utiliser des chemins relatifs pour les modèles 3D.
 
 ---
-
-## workflow Git & Contribution
-
-Nous utilisons un flux de travail basé sur les **Pull Requests (PR)**. Il est interdit de *commit* directement sur la branche `main` (ou `master`).
-
-### Procédure pour ajouter/modifier un composant :
-
-1.  **Mettez à jour votre dépôt local :**
-    ```bash
-    git checkout main
-    git pull origin main
-    ```
-2.  **Créez une nouvelle branche** avec un nom descriptif :
-    ```bash
-    git checkout -b ajout-capteur-imu
-    ```
-3.  **Faites vos modifications** dans KiCad.
-4.  **Vérifiez vos changements (Checklist) :**
-    * [ ] Le symbole a-t-il une Datasheet liée ?
-    * [ ] Les pins sont-elles sur la grille 50mil ?
-    * [ ] L'empreinte a-t-elle été vérifiée avec l'outil de mesure par rapport à la datasheet ?
-    * [ ] Le modèle 3D est-il bien calé ?
-    * [ ] Avez-vous lancé le "Symbol/Footprint Checker" de KiCad ?
-5.  **Commit et Push :**
-    ```bash
-    git add .
-    git commit -m "Add: Bosch BNO055 IMU symbol and footprint"
-    git push origin ajout-capteur-imu
-    ```
-6.  **Ouvrez une Pull Request (PR)** sur GitHub :
-    * Décrivez les ajouts.
-    * Ajoutez un lien vers la Datasheet dans la description de la PR.
-    * Assignez un membre du C3I pour la révision (Review).
-
----
-
-## ⚠️ Avant de valider une Pull Request (Pour les Reviewers)
-
-Ne fusionnez pas une PR sans avoir vérifié :
-1.  **Conformité KLC :** Les normes ci-dessus sont respectées.
-2.  **Validité électrique :** Les types de pins (Input, Output, Power Input) sont logiques (pour éviter les erreurs d'ERC futures).
-3.  **Faisabilité :** L'empreinte est soudable (pas de pads trop petits ou trop proches pour nos capacités d'assemblage).
-
----
-
-## 🛠 Installation pour les membres
-
-1. Clonez ce dépôt sur votre machine.
-2. Dans KiCad, allez dans **Preferences > Manage Symbol Libraries**.
-3. Ajoutez la librairie en mode "Project Specific" ou "Global" selon le besoin.
-4. Répétez pour **Manage Footprint Libraries**.
-5. Configurez les chemins 3D si nécessaire.
-
----
-
 *Maintenu par l'équipe électrique du C3I.*
