@@ -4,11 +4,32 @@
             "identifier": "com.github.cci-udes.library",
             "name": "C3I KiCad Library",
             "description": "Librairie officielle des composants C3I - UdeS",
+            "description_full": "Une collection compl\u00e8te de symboles sch\u00e9matiques, empreintes et mod\u00e8les 3D valid\u00e9s pour les projets d'ing\u00e9nierie du C3I.",
+            "type": "library",
+            "author": {
+                "name": "C3I UdeS",
+                "contact": {
+                    "web": "https://github.com/CCI-udes/Librairie_KiCad_Library"
+                }
+            },
             "license": "CC-BY-SA-4.0",
             "resources": {
                 "homepage": "https://github.com/CCI-udes/Librairie_KiCad_Library"
             },
             "releases": [
+                {
+                    "version": "1.0.7",
+                    "status": "stable",
+                    "kicad_version": "7.0",
+                    "download_sha256": "38bcbb45c43a917031af233347c37653a991b6b78802b5e4cbdf2ee3fcf63dac",
+                    "download_url": "https://github.com/CCI-udes/Librairie_KiCad_Library/releases/download/v1.0.7/C3I-Library-1.0.7.zip",
+                    "install_size": 78860,
+                    "platforms": [
+                        "linux",
+                        "windows",
+                        "macos"
+                    ]
+                },
                 {
                     "version": "1.0.6",
                     "status": "stable",
