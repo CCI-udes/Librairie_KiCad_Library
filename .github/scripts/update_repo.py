@@ -31,9 +31,7 @@ def main():
     zip_size = os.path.getsize(zip_path)
     download_url = f"{GITHUB_REPO_URL}/releases/download/{tag}/{zip_name}"
     
-    # 2. Créer la structure du PACKAGES.JSON (La liste pure)
-    # On essaie de récupérer l'ancienne liste pour ne pas perdre l'historique, 
-    # mais si ça plante, on repart à neuf.
+    # 2. Préparer le fichier PACKAGES.JSON
     if os.path.exists(PACKAGES_FILE):
         try:
             with open(PACKAGES_FILE, 'r') as f:
@@ -43,26 +41,34 @@ def main():
     else:
         packages_data = {"packages": []}
 
-    # On s'assure que la liste existe
     if "packages" not in packages_data:
         packages_data["packages"] = []
 
-    # Définition du paquet (Le contenu C3I)
+    # --- DEFINITION COMPLETE DU PAQUET (Tous les champs requis) ---
     package_info = {
         "identifier": "com.github.cci-udes.library",
         "name": "C3I KiCad Library",
         "description": "Librairie officielle des composants C3I - UdeS",
+        "description_full": "Une collection complète de symboles schématiques, empreintes et modèles 3D validés pour les projets d'ingénierie du C3I.",
+        "type": "library",
+        "author": {
+            "name": "C3I UdeS",
+            "contact": {
+                "web": GITHUB_REPO_URL
+            }
+        },
         "license": "CC-BY-SA-4.0",
         "resources": {
             "homepage": GITHUB_REPO_URL
         },
         "releases": []
     }
+    # -------------------------------------------------------------
     
-    # Trouver si le paquet existe déjà dans la liste pour le mettre à jour
+    # Récupérer l'historique des releases si le paquet existait déjà
     existing_pkg = next((p for p in packages_data["packages"] if p["identifier"] == "com.github.cci-udes.library"), None)
-    if existing_pkg:
-        package_info = existing_pkg # On reprend l'existant
+    if existing_pkg and "releases" in existing_pkg:
+        package_info["releases"] = existing_pkg["releases"]
 
     # Nouvelle release
     new_release = {
@@ -75,23 +81,19 @@ def main():
         "platforms": ["linux", "windows", "macos"]
     }
     
-    # Mise à jour de la liste des releases (remplace si version identique)
+    # Mise à jour de la liste
     package_info["releases"] = [r for r in package_info["releases"] if r["version"] != new_release["version"]]
     package_info["releases"].insert(0, new_release)
     
-    # Si c'était un nouveau paquet, on l'ajoute à la liste globale
-    if not existing_pkg:
-        packages_data["packages"].append(package_info)
+    # Remplacement du paquet dans la liste globale
+    packages_data["packages"] = [p for p in packages_data["packages"] if p["identifier"] != "com.github.cci-udes.library"]
+    packages_data["packages"].append(package_info)
 
-    # SAUVEGARDE DE PACKAGES.JSON
+    # SAUVEGARDE PACKAGES.JSON
     with open(PACKAGES_FILE, 'w') as f:
         json.dump(packages_data, f, indent=4)
     
-    print(f"Généré : {PACKAGES_FILE}")
-
-    # 3. Créer le REPOSITORY.JSON (L'enveloppe officielle)
-    # C'est ici qu'on applique la structure du JSON officiel que tu as montré
-    
+    # 3. Créer le REPOSITORY.JSON (Enveloppe)
     pkg_sha256 = get_sha256(PACKAGES_FILE)
     now = datetime.now(timezone.utc)
     
@@ -112,11 +114,10 @@ def main():
         }
     }
 
-    # SAUVEGARDE DE REPOSITORY.JSON
     with open(REPO_FILE, 'w') as f:
         json.dump(repo_data, f, indent=4)
 
-    print(f"Généré : {REPO_FILE} (Pointe vers packages.json)")
+    print(f"Succès ! Fichiers générés pour v{tag} avec toutes les métadonnées.")
 
 if __name__ == "__main__":
     main()
