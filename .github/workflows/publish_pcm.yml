@@ -54,12 +54,18 @@ jobs:
 
       - name: Update repository.json
         run: |
-          if [ -f gh-pages-branch/repository.json ]; then
-            cp gh-pages-branch/repository.json .
+          # Récupérer les anciens fichiers s'ils existent (pour garder l'historique)
+          if [ -f gh-pages-branch/packages.json ]; then
+            cp gh-pages-branch/packages.json .
           fi
+          
+          # Lancer le script (Génère packages.json ET repository.json)
           python .github/scripts/update_repo.py ${{ github.event.release.tag_name }} ${{ steps.names.outputs.zip_name }} "7.0"
+          
+          # Copier les DEUX fichiers vers le dossier public
           mkdir -p public
           cp repository.json public/
+          cp packages.json public/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
