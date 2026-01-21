@@ -34,11 +34,15 @@ def main():
             "packages": []
         }
 
-    # --- CORRECTION CRITIQUE : NOM DU DÉPÔT GLOBAL ---
-    # KiCad veut savoir comment s'appelle le "Magasin" lui-même
+    # --- CORRECTION V1.0.3 : MAINTAINER EST UN OBJET ---
     repo_data["name"] = "C3I Repository"
-    repo_data["maintainer"] = "C3I UdeS"
-    # -------------------------------------------------
+    repo_data["maintainer"] = {
+        "name": "C3I UdeS",
+        "contact": {
+            "web": REPO_URL
+        }
+    }
+    # ---------------------------------------------------
 
     # Trouver ou créer le paquet
     package = next((p for p in repo_data["packages"] if p["identifier"] == "com.github.cci-udes.library"), None)
@@ -49,7 +53,6 @@ def main():
         }
         repo_data["packages"].append(package)
 
-    # Métadonnées du paquet (Le produit dans le magasin)
     package["name"] = "C3I KiCad Library"
     package["description"] = "Librairie officielle des composants C3I - UdeS"
 
@@ -63,14 +66,13 @@ def main():
         "platforms": ["linux", "windows", "macos"]
     }
     
-    # Remplacement de la version si elle existe déjà
     package["releases"] = [r for r in package["releases"] if r["version"] != new_release["version"]]
     package["releases"].insert(0, new_release)
 
     with open(REPO_JSON_FILE, 'w') as f:
         json.dump(repo_data, f, indent=4)
     
-    print(f"Succès ! Version {tag} ajoutée avec Repository Name.")
+    print(f"Succès ! Version {tag} corrigée (Maintainer Object).")
 
 if __name__ == "__main__":
     main()
