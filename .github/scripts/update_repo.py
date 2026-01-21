@@ -8,7 +8,6 @@ from datetime import datetime, timezone
 REPO_BASE_URL = "https://cci-udes.github.io/Librairie_KiCad_Library"
 GITHUB_REPO_URL = "https://github.com/CCI-udes/Librairie_KiCad_Library"
 
-# Noms des fichiers générés
 PACKAGES_FILE = "packages.json"
 REPO_FILE = "repository.json"
 
@@ -26,12 +25,11 @@ def main():
     kicad_ver = sys.argv[3]
     zip_path = os.path.join(os.getcwd(), zip_name)
     
-    # 1. Préparer les infos du ZIP
     zip_sha256 = get_sha256(zip_path)
     zip_size = os.path.getsize(zip_path)
     download_url = f"{GITHUB_REPO_URL}/releases/download/{tag}/{zip_name}"
     
-    # 2. Préparer le fichier PACKAGES.JSON
+    # Charger packages.json existant
     if os.path.exists(PACKAGES_FILE):
         try:
             with open(PACKAGES_FILE, 'r') as f:
@@ -44,7 +42,7 @@ def main():
     if "packages" not in packages_data:
         packages_data["packages"] = []
 
-    # --- DEFINITION COMPLETE DU PAQUET (Tous les champs requis) ---
+    # --- DEFINITION DU PAQUET ---
     package_info = {
         "identifier": "com.github.cci-udes.library",
         "name": "C3I KiCad Library",
@@ -61,17 +59,20 @@ def main():
         "resources": {
             "homepage": GITHUB_REPO_URL
         },
-        "releases": []
+        "versions": []  # <--- CORRECTION ICI : 'versions' au lieu de 'releases'
     }
-    # -------------------------------------------------------------
     
-    # Récupérer l'historique des releases si le paquet existait déjà
+    # Récupérer l'existant
     existing_pkg = next((p for p in packages_data["packages"] if p["identifier"] == "com.github.cci-udes.library"), None)
-    if existing_pkg and "releases" in existing_pkg:
-        package_info["releases"] = existing_pkg["releases"]
+    if existing_pkg:
+        # Si l'ancien fichier utilisait "releases" (vieux format), on le migre, sinon on prend "versions"
+        if "versions" in existing_pkg:
+            package_info["versions"] = existing_pkg["versions"]
+        elif "releases" in existing_pkg:
+             package_info["versions"] = existing_pkg["releases"]
 
-    # Nouvelle release
-    new_release = {
+    # Création de l'objet Version
+    new_version = {
         "version": tag.lstrip('v'),
         "status": "stable",
         "kicad_version": kicad_ver,
@@ -82,18 +83,17 @@ def main():
     }
     
     # Mise à jour de la liste
-    package_info["releases"] = [r for r in package_info["releases"] if r["version"] != new_release["version"]]
-    package_info["releases"].insert(0, new_release)
+    package_info["versions"] = [v for v in package_info["versions"] if v["version"] != new_version["version"]]
+    package_info["versions"].insert(0, new_version)
     
-    # Remplacement du paquet dans la liste globale
+    # Sauvegarde dans la liste principale
     packages_data["packages"] = [p for p in packages_data["packages"] if p["identifier"] != "com.github.cci-udes.library"]
     packages_data["packages"].append(package_info)
 
-    # SAUVEGARDE PACKAGES.JSON
     with open(PACKAGES_FILE, 'w') as f:
         json.dump(packages_data, f, indent=4)
     
-    # 3. Créer le REPOSITORY.JSON (Enveloppe)
+    # --- REPOSITORY.JSON ---
     pkg_sha256 = get_sha256(PACKAGES_FILE)
     now = datetime.now(timezone.utc)
     
@@ -117,7 +117,7 @@ def main():
     with open(REPO_FILE, 'w') as f:
         json.dump(repo_data, f, indent=4)
 
-    print(f"Succès ! Fichiers générés pour v{tag} avec toutes les métadonnées.")
+    print(f"Succès v{tag} : Utilisation du champ 'versions'.")
 
 if __name__ == "__main__":
     main()
