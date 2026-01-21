@@ -1,0 +1,23 @@
+{
+    "$schema": "https://go.kicad.org/pcm/schemas/v1/repository",
+    "packages": [
+        {
+            "identifier": "com.github.cci-udes.library",
+            "releases": [
+                {
+                    "version": "1.0.0",
+                    "status": "stable",
+                    "kicad_version": "7.0",
+                    "download_sha256": "ad185320db535c98a918e4ea83edd7a589f08145b0f2961bf8a47ad6c79763c0",
+                    "download_url": "https://github.com/CCI-udes/Librairie_KiCad_Library/releases/download/v1.0.0/C3I-Library-1.0.0.zip",
+                    "install_size": 78855,
+                    "platforms": [
+                        "linux",
+                        "windows",
+                        "macos"
+                    ]
+                }
+            ]
+        }
+    ]
+}
