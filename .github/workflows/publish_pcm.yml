@@ -66,6 +66,7 @@ jobs:
           mkdir -p public
           cp repository.json public/
           cp packages.json public/
+          if [ -f logo.png ]; then cp logo.png public/; fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

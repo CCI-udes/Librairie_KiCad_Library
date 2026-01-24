@@ -10,6 +10,7 @@ GITHUB_REPO_URL = "https://github.com/CCI-udes/Librairie_KiCad_Library"
 
 PACKAGES_FILE = "packages.json"
 REPO_FILE = "repository.json"
+ICON_FILE = "logo.png"
 
 def get_sha256(filepath):
     with open(filepath, "rb") as f:
@@ -59,19 +60,26 @@ def main():
         "resources": {
             "homepage": GITHUB_REPO_URL
         },
-        "versions": []  # <--- CORRECTION ICI : 'versions' au lieu de 'releases'
+        "versions": []
     }
     
+    # --- GESTION DE L'ICONE (Nouveauté v1.0.9) ---
+    if os.path.exists(ICON_FILE):
+        print(f"Icone trouvée : {ICON_FILE}")
+        package_info["icon"] = {
+            "url": f"{REPO_BASE_URL}/{ICON_FILE}",
+            "sha256": get_sha256(ICON_FILE)
+        }
+    # ---------------------------------------------
+
     # Récupérer l'existant
     existing_pkg = next((p for p in packages_data["packages"] if p["identifier"] == "com.github.cci-udes.library"), None)
     if existing_pkg:
-        # Si l'ancien fichier utilisait "releases" (vieux format), on le migre, sinon on prend "versions"
         if "versions" in existing_pkg:
             package_info["versions"] = existing_pkg["versions"]
         elif "releases" in existing_pkg:
              package_info["versions"] = existing_pkg["releases"]
 
-    # Création de l'objet Version
     new_version = {
         "version": tag.lstrip('v'),
         "status": "stable",
@@ -82,11 +90,9 @@ def main():
         "platforms": ["linux", "windows", "macos"]
     }
     
-    # Mise à jour de la liste
     package_info["versions"] = [v for v in package_info["versions"] if v["version"] != new_version["version"]]
     package_info["versions"].insert(0, new_version)
     
-    # Sauvegarde dans la liste principale
     packages_data["packages"] = [p for p in packages_data["packages"] if p["identifier"] != "com.github.cci-udes.library"]
     packages_data["packages"].append(package_info)
 
@@ -117,7 +123,7 @@ def main():
     with open(REPO_FILE, 'w') as f:
         json.dump(repo_data, f, indent=4)
 
-    print(f"Succès v{tag} : Utilisation du champ 'versions'.")
+    print(f"Succès v{tag} : Icone intégrée.")
 
 if __name__ == "__main__":
     main()
