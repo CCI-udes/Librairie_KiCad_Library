@@ -18,6 +18,19 @@
             },
             "versions": [
                 {
+                    "version": "1.0.9",
+                    "status": "stable",
+                    "kicad_version": "7.0",
+                    "download_sha256": "38f37a9abe82f395ea143ba1d8a422cf69a4fd85ec004086126f55aa2da6ea0b",
+                    "download_url": "https://github.com/CCI-udes/Librairie_KiCad_Library/releases/download/v1.0.9/C3I-Library-1.0.9.zip",
+                    "install_size": 78861,
+                    "platforms": [
+                        "linux",
+                        "windows",
+                        "macos"
+                    ]
+                },
+                {
                     "version": "1.0.8",
                     "status": "stable",
                     "kicad_version": "7.0",
@@ -56,7 +69,11 @@
                         "macos"
                     ]
                 }
-            ]
+            ],
+            "icon": {
+                "url": "https://cci-udes.github.io/Librairie_KiCad_Library/logo.png",
+                "sha256": "8a7d66a8453185712110086e2e8aba006045837e316dc0a99d7adf21da6a6629"
+            }
         }
     ]
 }

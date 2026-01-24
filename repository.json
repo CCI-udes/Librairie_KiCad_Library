@@ -9,8 +9,8 @@
     },
     "packages": {
         "url": "https://cci-udes.github.io/Librairie_KiCad_Library/packages.json",
-        "sha256": "bb3ecfddf829f5180735abb3eefb55fdf0958b6952b7e693602207b55a46508b",
-        "update_time_utc": "2026-01-21 04:06:29",
-        "update_timestamp": 1768968389
+        "sha256": "9bfc64a9fee58c4bb1ff6c03b3766e7b6f5efe3956f317274e819052b610c4f5",
+        "update_time_utc": "2026-01-24 01:56:09",
+        "update_timestamp": 1769219769
     }
 }
