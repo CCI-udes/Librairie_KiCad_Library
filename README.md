@@ -7,7 +7,7 @@ Grâce à l'automatisation mise en place, cette librairie s'installe et se met �
 
 ---
 
-## 🚀 Installation (Utilisateurs)
+## Installation (Utilisateurs)
 
 Plus besoin de cloner le dépôt manuellement. Utilisez le **Plugin and Content Manager (PCM)** de KiCad.
 
@@ -28,7 +28,7 @@ Plus besoin de cloner le dépôt manuellement. Utilisez le **Plugin and Content 
 
 ---
 
-## 🤝 Contribuer (Développeurs)
+## Contribuer (Développeurs)
 
 Pour ajouter ou modifier un composant, vous devez passer par Git et GitHub.
 **Ne travaillez jamais directement sur `main`.**
@@ -54,7 +54,7 @@ Pour ajouter ou modifier un composant, vous devez passer par Git et GitHub.
 
 ---
 
-## 📦 Publication (Administrateurs)
+## Publication (Administrateurs)
 
 Pour diffuser une mise à jour à tous les membres du C3I via le PCM, il suffit de créer une **Release** sur GitHub. L'automatisation s'occupe du reste.
 
@@ -64,15 +64,14 @@ Pour diffuser une mise à jour à tous les membres du C3I via le PCM, il suffit 
 4.  **Tag version :** Créez un nouveau tag incrémental (ex: `v1.0.9`, `v1.1.0`).
     * *Important : Le tag doit commencer par 'v'.*
 5.  Cliquez sur **Publish release**.
-
-🤖 **Le robot va automatiquement :**
+ **Le robot va automatiquement :**
 * Zipper la librairie.
 * Mettre à jour le fichier `repository.json`.
 * Rendre la mise à jour visible dans le PCM de tout le monde sous quelques minutes.
 
 ---
 
-## 📏 Normes de Conception (Standards)
+## Normes de Conception (Standards)
 
 Pour garantir la qualité de la librairie :
 
